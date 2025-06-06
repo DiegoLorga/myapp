@@ -4,8 +4,16 @@ import '../models/producto_model.dart';
 import 'package:myapp/screens/product_details.dart';
 import 'package:myapp/screens/carrito_screen.dart';
 import 'package:myapp/screens/agregar_producto_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key}); // ← ESTE CONSTRUCTOR DEBE EXISTIR
+
+    void cerrarSesion(BuildContext context) async {
+    await FirebaseAuth.instance.signOut();
+    // Volverá automáticamente al login porque tu AuthGate lo controla
+  }
+
   @override
   Widget build(BuildContext context) {
     final productosRef = FirebaseFirestore.instance.collection('productos');
@@ -23,13 +31,9 @@ class HomeScreen extends StatelessWidget {
             },
           ),
           IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (_) => AgregarProductoScreen()),
-              );
-            },
+            icon: const Icon(Icons.logout),
+            tooltip: 'Cerrar sesión',
+            onPressed: () => cerrarSesion(context),
           ),
         ],
         title: Text('Lorga toys'),
