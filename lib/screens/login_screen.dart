@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ? CircularProgressIndicator()
                 : ElevatedButton(
                   onPressed: loginOrRegister,
-                  child: Text('Iniciar sesión / Registrarse'),
+                  child: Text('Iniciar sesión'),
                 ),
           ],
         ),
