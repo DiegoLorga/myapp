@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/carrito_provider.dart';
 
 class CarritoScreen extends StatelessWidget {
+  const CarritoScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final carrito = Provider.of<CarritoProvider>(context);
@@ -37,10 +39,7 @@ class CarritoScreen extends StatelessWidget {
                                   DropdownButton<int>(
                                     value: item.cantidad,
                                     items:
-                                        List.generate(
-                                              10,
-                                              (i) => i + 1,
-                                            ) // 1 a 10 unidades
+                                        List.generate(10, (i) => i + 1)
                                             .map(
                                               (n) => DropdownMenuItem(
                                                 value: n,
@@ -55,6 +54,21 @@ class CarritoScreen extends StatelessWidget {
                                           value,
                                         );
                                       }
+                                    },
+                                  ),
+                                  IconButton(
+                                    icon: Icon(Icons.delete, color: Colors.red),
+                                    onPressed: () async {
+                                      await carrito.removerProducto(
+                                        item.producto.id,
+                                      );
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        SnackBar(
+                                          content: Text('Producto eliminado'),
+                                        ),
+                                      );
                                     },
                                   ),
                                 ],
@@ -82,11 +96,19 @@ class CarritoScreen extends StatelessWidget {
                         ),
                         SizedBox(height: 10),
                         ElevatedButton(
-                          onPressed: () {
-                            carrito.vaciarCarrito();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Compra confirmada')),
-                            );
+                          onPressed: () async {
+                            try {
+                              await carrito.confirmarCompra();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Compra realizada con éxito'),
+                                ),
+                              );
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Error: $e')),
+                              );
+                            }
                           },
                           child: Text('Confirmar compra'),
                         ),

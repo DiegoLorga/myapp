@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AgregarProductoScreen extends StatefulWidget {
+  const AgregarProductoScreen({super.key});
+
   @override
   _AgregarProductoScreenState createState() => _AgregarProductoScreenState();
 }

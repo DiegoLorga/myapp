@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/producto_model.dart';
 import 'package:myapp/screens/product_details.dart';
 import 'package:myapp/screens/carrito_screen.dart';
-import 'package:myapp/screens/agregar_producto_screen.dart';
+import 'package:myapp/screens/favoritos_screen.dart'; // ✅ AÑADIDO
 import 'package:firebase_auth/firebase_auth.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key}); // ← ESTE CONSTRUCTOR DEBE EXISTIR
+  const HomeScreen({super.key});
 
-    void cerrarSesion(BuildContext context) async {
+  void cerrarSesion(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
     // Volverá automáticamente al login porque tu AuthGate lo controla
   }
@@ -20,13 +20,26 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        title: const Text('Lorga toys'),
+        backgroundColor: const Color.fromARGB(255, 44, 104, 235),
         actions: [
           IconButton(
-            icon: Icon(Icons.shopping_cart),
+            icon: const Icon(Icons.shopping_cart),
+            tooltip: 'Ver carrito',
             onPressed: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => CarritoScreen()),
+              );
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.favorite_border),
+            tooltip: 'Ver favoritos',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const FavoritosScreen()),
               );
             },
           ),
@@ -36,8 +49,6 @@ class HomeScreen extends StatelessWidget {
             onPressed: () => cerrarSesion(context),
           ),
         ],
-        title: Text('Lorga toys'),
-        backgroundColor: const Color.fromARGB(255, 44, 104, 235),
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: productosRef.snapshots(),
@@ -54,7 +65,7 @@ class HomeScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 final p = productos[index];
                 return Card(
-                  margin: EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
                   elevation: 4,
                   child: ListTile(
                     leading: Image.network(
@@ -69,8 +80,7 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder:
-                              (context) => ProductDetailsScreen(producto: p),
+                          builder: (_) => ProductDetailsScreen(producto: p),
                         ),
                       );
                     },
@@ -79,9 +89,9 @@ class HomeScreen extends StatelessWidget {
               },
             );
           } else if (snapshot.hasError) {
-            return Center(child: Text('Error al cargar productos'));
+            return const Center(child: Text('Error al cargar productos'));
           }
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
